@@ -1,10 +1,14 @@
+require('dotenv').config()
 const express = require('express')
+const bodyparser = require('body-parser')
 const fs = require('fs');
+const { env } = require('process');
 const app = express()
 const port = 8078
 
+app.use(bodyparser.urlencoded({ extended: true }))
+
 const database = JSON.parse(fs.readFileSync('data.json').toString())
-let lastUserId = database.users.map(u => u.id).sort((a, b) => b - a)[0] || 0
 let lastShareId = database.shares.map(s => s.id).sort((a, b) => b - a)[0] || 0
 
 let databaseChanged = false;
@@ -67,16 +71,16 @@ app.get('/api/user-shares', (req, res) => {
 })
 
 app.post('/api/share', (req, res) => {
-    let userId
-    if (!req.query.id) {
-        logWithDate('Malformed share submission, no id')
+    const userId = Number(req.body.id) || null
+    const pass = req.body.pass || null
+
+    if (userId === null || pass === null) {
+        logWithDate('Malformed share submitted')
         res.status(400).end()
         return
-    } else {
-        userId = Number(req.query.id)
     }
 
-    if (checkUserId(userId)) {
+    if (checkUserId(userId) && pass == process.env.SHARE_PASS) {
         logWithDate(`Post for /share with id=${userId}`)
         addShare(userId)
         res.status(200).end()

@@ -1,13 +1,1 @@
-{
-    "users": [
-        {
-            "id": 1,
-            "name": "Example User 1"
-        },
-        {
-            "id": 2,
-            "name": "Example User 2"
-        }
-    ],
-    "shares": []
-}
+{"users":[{"id":1,"name":"Example User 1"},{"id":2,"name":"Example User 2"}],"shares":[{"id":1,"user":1,"date":"2021-03-01T22:43:15.526Z"}]}
