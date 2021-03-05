@@ -36,6 +36,10 @@ const checkUserId = (id) => {
     return ids.includes(id)
 }
 
+const getShareCount = (userId) => {
+    return database.shares.filter(s => Number(s.id) == userId).length
+}
+
 const saveJob = setInterval(() => {
     if (databaseChanged) {
         fs.writeFile('data.json', JSON.stringify(database), () => {
@@ -50,6 +54,25 @@ app.get('/api/users', (req, res) => {
     res.status(200).send(JSON.stringify(database.users)).end()
     logWithDate('Request for /users')
     return
+})
+
+app.get('/api/share-count', (req, res) => {
+    if (!req.query.id) {
+        const counts = database.users.map(u => { return { 'user': u.id, 'count': database.shares.filter(s => s.user == u.id).length } })
+        res.setHeader('Content-Type', 'application/json')
+        res.status(200).send(JSON.stringify(counts)).end()
+        return
+    }
+
+    if (req.query.id && checkUserId(Number(req.query.id))) {
+        const count = getShareCount(Number(req.query.id))
+        res.setHeader('Content-Type', 'application/json')
+        res.status(200).send(JSON.stringify(count)).end()
+        return
+    }
+
+    logWithDate('Request for share count of nonexistant user')
+    res.status(400).end()
 })
 
 app.get('/api/all', (req, res) => {
