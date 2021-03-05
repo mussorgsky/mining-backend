@@ -37,7 +37,7 @@ const checkUserId = (id) => {
 }
 
 const getShareCount = (userId) => {
-    return database.shares.filter(s => Number(s.id) == userId).length
+    return database.shares.filter(s => Number(s.user) == userId).length
 }
 
 const saveJob = setInterval(() => {
