@@ -47,12 +47,14 @@ const saveJob = setInterval(() => {
 }, 1000);
 
 app.get('/api/users', (req, res) => {
+    res.setHeader('Content-Type', 'application/json')
     res.status(200).send(JSON.stringify(database.users)).end()
     logWithDate('Request for /users')
     return
 })
 
 app.get('/api/all', (req, res) => {
+    res.setHeader('Content-Type', 'application/json')
     res.status(200).send(JSON.stringify(database)).end()
     logWithDate('Request for /all')
     return
@@ -69,6 +71,7 @@ app.get('/api/user-shares', (req, res) => {
     }
     logWithDate(`Request for /user-shares with id=${userId}`)
     if (checkUserId(userId)) {
+        res.setHeader('Content-Type', 'application/json')
         res.status(200).send(JSON.stringify(database.shares.filter(s => s.user == userId).map(s => { return { 'id': s.id, 'date': s.date } }))).end();
         return;
     }
