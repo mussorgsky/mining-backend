@@ -46,6 +46,12 @@ const saveJob = setInterval(() => {
     }
 }, 1000);
 
+app.get('/api/users', (req, res) => {
+    res.status(200).send(JSON.stringify(database.users)).end()
+    logWithDate('Request for /users')
+    return
+})
+
 app.get('/api/all', (req, res) => {
     res.status(200).send(JSON.stringify(database)).end()
     logWithDate('Request for /all')
